@@ -2,13 +2,6 @@ import time
 
 from cminiopy import CMinio
 
-c = CMinio(
-    "10.1.1.14:9000",
-    "adminadmin",
-    "passwordpassword",
-    False
-)
-
 # c = CMinio(
 #     "localhost:9001",
 #     "minioadmin",
