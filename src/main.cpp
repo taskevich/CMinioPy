@@ -10,10 +10,17 @@ PYBIND11_MODULE(cminiopy, m) {
              py::arg("secret_key"), py::arg("secure") = true)
         .def("bucket_exists", &CMinio::bucket_exists)
         .def("make_bucket", &CMinio::make_bucket)
-        .def("list_objects", 
-            [](CMinio &self, const std::string &a, const std::string &b) {
-                return self.list_objects(a, b);
-            },
-            py::arg("bucket_name"), py::arg("prefix") = ""
-        );
+        .def("list_objects", [](CMinio &self, const std::string &bucket, const std::string &prefix, bool recursive) {
+            ListObjectsArgs args;
+            args.bucket = bucket;
+            if (!prefix.empty())
+                args.prefix = prefix;
+            args.recursive = recursive;
+            return std::make_shared<ListObjectsIterator>(self.client_.get(), args);
+        });
+
+    py::class_<ListObjectsIterator, std::shared_ptr<ListObjectsIterator>>(m, "ListObjectsIterator")
+        .def(py::init<Client*, const ListObjectsArgs&>())
+        .def("__iter__", [](ListObjectsIterator &it) -> ListObjectsIterator& { return it; })
+        .def("__next__", &ListObjectsIterator::next);
 }

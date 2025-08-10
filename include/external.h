@@ -15,7 +15,9 @@ using minio::creds::StaticProvider;
 
 using std::string;
 using std::make_unique;
+using std::make_shared;
 using std::unique_ptr;
+using std::shared_ptr;
 using std::runtime_error;
 
 namespace py = pybind11;
